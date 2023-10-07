@@ -6,10 +6,11 @@ import os
 
 
 urlpatterns = [
-    path(os.getenv("ADMIN_URL"), admin.site.urls),
+    path(os.getenv("ADMIN_URL"), admin.site.urls),  # type: ignore
     path("api/v1/auth/", include("djoser.urls")),
     path("api/v1/auth/", include("djoser.urls.jwt")),
     path("api/v1/profile/", include("apps.profiles.urls")),
+    path("api/v1/properties/", include("apps.properties.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

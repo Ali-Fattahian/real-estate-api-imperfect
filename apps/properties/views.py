@@ -182,7 +182,7 @@ class PropertySearchAPIView(APIView):
 
     def post(self, request):
         queryset = Property.objects.filter(published_status=True)
-        data = request.data
+        data = self.request.data  # type: ignore
 
         advert_type = data["advert_type"]
         queryset = queryset.filter(advert_type__iexact=advert_type)
