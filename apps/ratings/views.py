@@ -17,14 +17,14 @@ User = get_user_model()
 def create_agent_review(request, profile_id):
     agent_profile = get_object_or_404(Profile, id=profile_id, is_agent=True)
     data = request.data
-    profile_user = User.objects.get(pkid=agent_profile.user.pkid)
+    profile_user = User.objects.get(pkid=agent_profile.user.pkid)  # type: ignore
 
-    if profile_user.email == request.user.email:
+    if profile_user.email == request.user.email:  # type: ignore
         formatted_response = {"message": "You can't rate yourself"}
         return Response(formatted_response, status=status.HTTP_403_FORBIDDEN)
 
-    alreadyExists = agent_profile.agent_review.filter(
-        agent__pkid=profile_user.pkid
+    alreadyExists = agent_profile.agent_review.filter(  # type: ignore
+        agent__pkid=profile_user.pkid  # type: ignore
     ).exists()
 
     if alreadyExists:
@@ -36,19 +36,19 @@ def create_agent_review(request, profile_id):
         return Response(formatted_response, status=status.HTTP_400_BAD_REQUEST)
 
     else:
-        review = Rating.objects.create(
+        Rating.objects.create(
             rate_user=request.user,
             agent=agent_profile,
             rating=data["rating"],
             comment=data["comment"],
         )
-        reviews = agent_profile.agent_review.all()
+        reviews = agent_profile.agent_review.all()  # type: ignore
         agent_profile.num_reviews = len(reviews)
 
         total = 0
         for i in reviews:
             total += i.rating
 
-        agent_profile.rating = round(total / len(reviews), 2)
+        agent_profile.rating = round(total / len(reviews), 2)  # type: ignore
         agent_profile.save()
         return Response("Review Added")
