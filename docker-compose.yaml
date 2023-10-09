@@ -10,8 +10,8 @@ services:
       - .:/app
       - static_volume:/app/staticfiles
       - media_volume:/app/media
-    ports:
-      - "8000:8000"
+    # ports:
+    #   - "8000:8000"
     env_file:
       - .env
     depends_on:
@@ -31,6 +31,20 @@ services:
     networks:
       - real-estate-website
 
+  nginx:
+    restart: always
+    depends_on:
+      - api
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    build:
+      context: ./docker/local/nginx
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    networks:
+      - real-estate-website
 networks:
   real-estate-website:
     driver: bridge
