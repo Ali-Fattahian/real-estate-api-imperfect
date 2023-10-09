@@ -13,4 +13,4 @@ app = Celery("real_estate_website")
 
 app.config_from_object("real_estate_backend.settings.development", namespace="CELERY")
 
-app.autodiscover(lambda: base.INSTALLED_APPS)
+app.autodiscover_tasks(lambda: base.INSTALLED_APPS)
