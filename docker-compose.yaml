@@ -16,6 +16,7 @@ services:
       - .env
     depends_on:
       - postgres-db
+      - redis
     networks:
       - real-estate-website
   postgres-db:
@@ -30,6 +31,42 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
     networks:
       - real-estate-website
+
+  redis:
+    image: redis:5-alpine
+    networks:
+      - real-estate-website
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: ./docker/local/django/Dockerfile
+    command: /start-celery_worker
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - postgres-db
+    networks:
+      - real-estate-website
+    
+  flower:
+    build: 
+      context: .
+      dockerfile: ./docker/local/django/Dockerfile
+      command: /start-flower
+      volumes:
+        - .:/app
+      env_file:
+        - .env
+      ports:
+        "5557:5555"
+      depends_on:
+        - redis
+        - postgres-db
+      network: real-estate-website
 
   nginx:
     restart: always

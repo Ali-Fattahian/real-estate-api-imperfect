@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -o errexit
+
+set -o nounset
+
+worker_ready(){
+    celery -A real-estate-website inspect ping
+}
+
+until worker_ready; do
+    >& echo "Celery workers not available..."
+    sleep 1
+done
+
+>& echo "Celery workers are available and ready"
+
+flower \
+    --app=real-estate-website \
+    --broker="${CELERY_BROKER}"
