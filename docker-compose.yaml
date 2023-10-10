@@ -20,6 +20,18 @@ services:
         networks:
             - real-estate-website
 
+    client:
+        build: 
+            context: ./client
+            dockerfile: Dockerfile.dev
+        restart: on-failure
+        volumes:
+            - ./client:/app
+            - ./app/node_modules
+        
+        networks:
+            - real-estate-website
+
     postgres-db:
         image: postgres:12.0-alpine
         ports:
