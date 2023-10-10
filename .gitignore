@@ -8,7 +8,7 @@ __pycache__/
 .DS_Store
 staticfiles
 media
-real_estate_frontend/node_modules
+client/node_modules
 
 # C extensions
 *.so
